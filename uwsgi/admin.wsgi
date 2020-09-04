@@ -69,9 +69,9 @@ cache.make_cache("blob_schema", 50, 24 * 60 * 60)
 # has at least one permission.
 cache.make_cache("users", 1, 300)
 
-if not os.environ.get("RELEASES_HISTORY_BUCKET") or not os.environ.get("NIGHTLY_HISTORY_BUCKET"):
-    log.critical("RELEASES_HISTORY_BUCKET and NIGHTLY_HISTORY_BUCKET must be provided")
-    sys.exit(1)
+#if not os.environ.get("RELEASES_HISTORY_BUCKET") or not os.environ.get("NIGHTLY_HISTORY_BUCKET"):
+#    log.critical("RELEASES_HISTORY_BUCKET and NIGHTLY_HISTORY_BUCKET must be provided")
+#    sys.exit(1)
 if not LOCALDEV:
     if "GOOGLE_APPLICATION_CREDENTIALS" in os.environ and not os.path.exists(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")):
         log.critical("GOOGLE_APPLICATION_CREDENTIALS provided, but does not exist")
@@ -206,18 +206,6 @@ application.config["AUTH_DOMAIN"] = os.environ["AUTH0_DOMAIN"]
 application.config["AUTH_AUDIENCE"] = os.environ["AUTH0_AUDIENCE"]
 
 application.config["M2M_ACCOUNT_MAPPING"] = {
-    # Local dev
-    "41U6XJQdSa6CL8oGa6CXvO4aZWlnq5xg": "balrogagent",
     # Dev
-    "R6Tpyx7clqQFmR6bvkAUJodV4J8V8LdQ": "balrogagent",
-    "EwqLzlkJUg6CLrmGdP4xfu9ytc8HpMzU": "balrogagent",
-    # Stage
-    "tKirJIJUQ5D5wU1oxPoA1qxEzmMHnB4h": "balrogagent",
-    "tKO6KT7I8vAga0tVG5kPyaZzjhf0OYGF": "balrogagent",
-    "tGbG2QUboAQpF35j1p40dpD2XYiC4AB7": "balrog-stage-ffxbld",
-    "nyfi9KOMJZXAq3xjkF57wSwkJS2gUkHO": "balrog-stage-tbirdbld",
-    # Prod
-    "6TpOQiDH9UhSUouLrxlLP7PbWyJ8epsa": "balrogagent",
-    "DqmXymgjiz6XuRXIewDnuR7oB8bOxkf0": "balrog-ffxbld",
-    "ztM3MdGFNjbPYOq7R4br2EukKhuL6qlY": "balrog-tbirdbld",
+    "Vvt1zfx3qLAgXBePnhtgPjvXN1silTbh": "ci"
 }
