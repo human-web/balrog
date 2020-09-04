@@ -1,0 +1,17 @@
+#!/bin/bash
+set -ex
+
+IMAGE=${docker_image}
+docker pull $IMAGE
+
+cat >> ~/.ssh/authorized_keys << 'EOF'
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCiCd+XQlt5Go9Lq46h2R8t5flGWt0wrbQUQ9qbN5jysRM/e+AledKDi647E/vKe/4x6NWqxOgXAxnEJ+01j6k9ZQj+L5B7aTBy86sDVrH4rqwGEekUpnUPkvA1Jq2QIvLjHbVhGK1YSLPEX40rFV8/W61inlKztgsZ/YuJBUKluz5bvBLlDlKS0Zxmd2q8/booptE9q2bdEp4O0gP0864m8HcciKZGyCR9h7qr/iVvX2BUBrJtkjCdoyBup+2A+EEgN08FFdPhJCKcQUagtpNLLqtcn6GlMaGF/Kk6VIy6f876yCcP6gct1Y6pwk7cJ8lxjH80T/uw0jxLJiFXnXfvap56S4xEVeahHTTef11BBj44tdfAniJfFX45AuuAD/vjSoUZVgRP40BfwFHbJcGP0w4H/sGuMEsRvjPlkj7gskqcbIr/10nYqWWtkeMfohOguzD8eJ8/9TARaP8NpFNYr0eQmTNdg47u8FSJuoxyAu7FlaIyHzC8K/jA+ITeYDx1HmGthFa4GKkHY7rNpx+w9l8LhH+nFZkyz3tkkjcOzuFZpHhJsKDecu0Eqx3LMqgj73un4Qd3iFub9cndyIp+CQN+yNXqzgx1/EU2Wn+sRoavtnzVjd1znC2tIq651xL+Tr24EHjwiyjydVD6svAm4labDc7E5l4WvwuCg/ouMQ== sam@cliqz.com
+EOF
+
+docker run -p 9010:9010 --restart always \
+  --env "DBURI=mysql://${db_user}:${db_pass}@${db_host}/${db_name}" \
+  --env "SECRET_KEY=234d9asvn3sd" \
+  --env "PORT=9010" \
+  --env "LOG_FORMAT=plain" \
+  --env "LOG_LEVEL=WARNING" \
+  $IMAGE public

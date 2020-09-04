@@ -33,11 +33,11 @@ resource "aws_launch_configuration" "balrogadmin-launch-config" {
   image_id = data.aws_ami.ubuntu.id
 
   security_groups = [ aws_security_group.balrog-admin.id, local.vpn_sec_group_id ]
-  instance_type = "t3a.nano"
+  instance_type = "t3a.micro"
   user_data = data.template_file.balrog-admin-userdata-script.rendered
   iam_instance_profile = aws_iam_instance_profile.balrog.arn
   associate_public_ip_address = false
-  spot_price = 0.004
+  spot_price = 0.008
 
   key_name = local.key_name
   lifecycle {

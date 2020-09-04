@@ -125,10 +125,12 @@ resource "aws_lb_target_group" "balrog-public" {
   }
 }
 
-resource "aws_lb_listener" "balrog-public-http" {
+resource "aws_lb_listener" "balrog-public-https" {
   load_balancer_arn = aws_lb.balrog-public-lb.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = "arn:aws:acm:us-east-1:470602773899:certificate/cff359d7-9c7c-40f8-ab93-458a0335b624"
 
   default_action {
     target_group_arn = aws_lb_target_group.balrog-public.arn
