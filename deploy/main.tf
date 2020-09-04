@@ -4,6 +4,7 @@ locals {
   key_name = "sam"
   vpc_id = "vpc-2c11904a"
   private_subnets = [ "subnet-2a058116", "subnet-9587f6ce", "subnet-6659712f", "subnet-bfafd492" ]
+  public_subnets = [ "subnet-4004807c", "subnet-51587018", "subnet-8a84f5d1", "subnet-bda8d390" ]
   vpn_sec_group_id = "sg-03d0a12d9dcc230eb"
   dns_zone_id = "Z1T9VA34W75OR4"
   dns_name_admin = "balrogadmin.ghosterydev.com"
@@ -32,4 +33,35 @@ data "aws_ami" "ubuntu" {
   }
 
   owners = ["141047255820"]
+}
+
+resource "aws_iam_instance_profile" "balrog" {
+  name = "balrog"
+  role = aws_iam_role.balrog.name
+}
+
+resource "aws_iam_role" "balrog" {
+  name = "balrog"
+  path = "/"
+
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+               "Service": "ec2.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "telemetry-scheduler-ecr_access" {
+  role       = aws_iam_role.balrog.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }

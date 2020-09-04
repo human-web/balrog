@@ -17,37 +17,6 @@ resource "aws_security_group" "balrog-admin" {
   vpc_id = local.vpc_id
 }
 
-resource "aws_iam_instance_profile" "balrog" {
-  name = "balrog"
-  role = aws_iam_role.balrog.name
-}
-
-resource "aws_iam_role" "balrog" {
-  name = "balrog"
-  path = "/"
-
-  assume_role_policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Action": "sts:AssumeRole",
-            "Principal": {
-               "Service": "ec2.amazonaws.com"
-            },
-            "Effect": "Allow",
-            "Sid": ""
-        }
-    ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy_attachment" "telemetry-scheduler-ecr_access" {
-  role       = aws_iam_role.balrog.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-}
-
 data "template_file" "balrog-admin-userdata-script" {
   template = file("${path.module}/userdata-admin.sh.tmpl")
   vars = {
@@ -64,11 +33,11 @@ resource "aws_launch_configuration" "balrogadmin-launch-config" {
   image_id = data.aws_ami.ubuntu.id
 
   security_groups = [ aws_security_group.balrog-admin.id, local.vpn_sec_group_id ]
-  instance_type = "t3a.small"
+  instance_type = "t3a.nano"
   user_data = data.template_file.balrog-admin-userdata-script.rendered
   iam_instance_profile = aws_iam_instance_profile.balrog.arn
   associate_public_ip_address = false
-  spot_price = 0.018
+  spot_price = 0.004
 
   key_name = local.key_name
   lifecycle {
