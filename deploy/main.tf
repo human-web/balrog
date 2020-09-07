@@ -1,6 +1,7 @@
 locals {
   region = "us-east-1"
   docker_image = "470602773899.dkr.ecr.us-east-1.amazonaws.com/balrog/balrog"
+  docker_image_agent = "470602773899.dkr.ecr.us-east-1.amazonaws.com/balrog/agent"
   key_name = "sam"
   vpc_id = "vpc-2c11904a"
   private_subnets = [ "subnet-2a058116", "subnet-9587f6ce", "subnet-6659712f", "subnet-bfafd492" ]

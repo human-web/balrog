@@ -13,6 +13,12 @@ docker run \
   --env "DB_HOST=${db_host}" \
   $IMAGE upgrade-db
 
+docker run -d -restart always \
+  --env "LOG_FORMAT=plain" \
+  --env "LOG_LEVEL=INFO" \
+  --env "TELEMETRY_API_ROOT=abc" \
+  ${docker_image_agent}
+
 docker run -p 7070:7070 --restart always \
   --env "DBURI=mysql://${db_user}:${db_pass}@${db_host}/${db_name}" \
   --env "DB_HOST=${db_host}" \

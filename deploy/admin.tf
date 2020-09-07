@@ -21,6 +21,7 @@ data "template_file" "balrog-admin-userdata-script" {
   template = file("${path.module}/userdata-admin.sh.tmpl")
   vars = {
     docker_image = local.docker_image
+    docker_image_agent = local.docker_image_agent
     db_host = local.db_host
     db_name = local.db_name
     db_user = local.db_user
