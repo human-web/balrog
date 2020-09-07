@@ -17,30 +17,11 @@ from auslib.log import configure_logging
 STAGING = bool(int(os.environ.get("STAGING", 0)))
 LOCALDEV = bool(int(os.environ.get("LOCALDEV", 0)))
 
-SYSTEM_ACCOUNTS = ["balrogagent", "balrog-ffxbld", "balrog-tbirdbld", "seabld"]
+SYSTEM_ACCOUNTS = ["ci"]
 DOMAIN_WHITELIST = {
-    "download.mozilla.org": ("Firefox", "Fennec", "Devedition", "Thunderbird"),
-    "archive.mozilla.org": ("Firefox", "Fennec", "Devedition", "Thunderbird"),
-    "download.cdn.mozilla.net": ("Firefox", "Fennec"),
-    "ciscobinary.openh264.org": ("OpenH264",),
-    "cdmdownload.adobe.com": ("CDM",),
-    "clients2.googleusercontent.com": ("Widevine",),
-    "redirector.gvt1.com": ("Widevine",),
-    "ftp.mozilla.org": ("SystemAddons",),
-    "fpn.firefox.com": ("FirefoxVPN", "Guardian"),
-    "vpn.mozilla.org": ("FirefoxVPN", "Guardian"),
+    "github.com": ("Ghostery"),
+    "repo.ghosterybrowser.com": ("Ghostery),
 }
-if STAGING or LOCALDEV:
-    SYSTEM_ACCOUNTS.extend(["balrog-stage-ffxbld", "balrog-stage-tbirdbld"])
-    DOMAIN_WHITELIST.update(
-        {
-            "ftp.stage.mozaws.net": ("Firefox", "Fennec", "Devedition", "SeaMonkey", "Thunderbird"),
-            "bouncer-bouncer-releng.stage.mozaws.net": ("Firefox", "Fennec", "Devedition", "SeaMonkey", "Thunderbird"),
-            "stage.guardian.nonprod.cloudops.mozgcp.net": ("FirefoxVPN", "Guardian"),
-            "stage-vpn.guardian.nonprod.cloudops.mozgcp.net": ("FirefoxVPN", "Guardian"),
-        }
-    )
-
 
 # Logging needs to be set-up before importing the application to make sure that
 # logging done from other modules uses our Logger.
@@ -76,66 +57,6 @@ if not LOCALDEV:
     if "GOOGLE_APPLICATION_CREDENTIALS" in os.environ and not os.path.exists(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")):
         log.critical("GOOGLE_APPLICATION_CREDENTIALS provided, but does not exist")
         sys.exit(1)
-
-if LOCALDEV and not os.path.exists(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")):
-    log.info("Disabling releases_history writes for localdev without google credentials specified")
-    buckets = None
-else:
-    # We use this factory instead of creating an instance of Storage here
-    # because the async Storage creates an aiohttp.ClientSession upon instantiation,
-    # which grabs a reference to the current EventLoop. Because we're using
-    # asyncio.run in some endpoints to wait on coroutines, we end up with a
-    # new EventLoop each time it is called. This means that the second time
-    # Storage attempts to use the ClientSession it has created, the EventLoop
-    # it holds will be closed, which completely breaks it.
-    # (It is technically possible to override the ClientSession that a Storage
-    # object holds, but it involves digging into the implementation details
-    # of that object, as well as other objects it holds - so it's not a very
-    # robust solution.)
-    #
-    # Because this is a factory, consumers (notably, GCSHistoryAsync) must
-    # instantiate the Storage object themselves before they use it.
-    def BucketFactory(bucket):
-        def factory(*args, use_gcloud_aio=True, **kwargs):
-            if use_gcloud_aio:
-                return Storage(*args, **kwargs).get_bucket(bucket)
-            else:
-                # We tried to use the async Storage class for the
-                # synchronous GCSHistory class, but hit issues with
-                # Event Loops. This code will be removed in the near
-                # future, so in the meantime we'll just continue
-                # using the synchronous client.
-                return storage.Client().get_bucket(bucket)
-
-        return factory
-
-    bucket_factory = BucketFactory
-
-    # Order is important here, we fall through to the last entry. This works because dictionary keys
-    # are returned in insertion order when iterated on.
-    # Turn off formatting because it is clearer to have these listed one after another
-    # fmt: off
-    buckets = {
-        "nightly": bucket_factory(os.environ["NIGHTLY_HISTORY_BUCKET"]),
-        "": bucket_factory(os.environ["RELEASES_HISTORY_BUCKET"]),
-    }
-    # fmt: on
-
-    # Check if we have write access, and set the bucket configuration appropriately
-    # There's basically two cases here:
-    #   * Credentials have been provided and can write to the buckets, or no credentials have been provided -> enable writes
-    #   * Credentials have not been provided, or they can't write to the bucket
-    #     * If we're local dev disable writes
-    #     * If we're anywhere else, raise an Exception (local dev is the only place where we can be sure we can safely disable them)
-    for bucket in buckets.values():
-        # Needs to be wrapped so we can use `async with` to make sure ClientSession
-        # gets closed.
-        async def wrapper():
-            async with aiohttp.ClientSession() as session:
-                blob = bucket(session=session).new_blob("startuptest")
-                await blob.upload("startuptest")
-
-        asyncio.run(wrapper())
 
 dbo.setDb(os.environ["DBURI"], buckets)
 if os.environ.get("NOTIFY_TO_ADDR"):

@@ -12,26 +12,9 @@ LOCALDEV = bool(int(os.environ.get("LOCALDEV", 0)))
 
 SPECIAL_FORCE_HOSTS = ["http://download.mozilla.org"]
 DOMAIN_WHITELIST = {
-    "download.mozilla.org": ("Firefox", "Fennec", "Devedition", "Thunderbird"),
-    "archive.mozilla.org": ("Firefox", "Fennec", "Devedition", "Thunderbird"),
-    "download.cdn.mozilla.net": ("Firefox", "Fennec"),
-    "ciscobinary.openh264.org": ("OpenH264",),
-    "cdmdownload.adobe.com": ("CDM",),
-    "clients2.googleusercontent.com": ("Widevine",),
-    "redirector.gvt1.com": ("Widevine",),
-    "ftp.mozilla.org": ("SystemAddons",),
-    "fpn.firefox.com": ("FirefoxVPN", "Guardian"),
-    "vpn.mozilla.org": ("FirefoxVPN", "Guardian"),
+    "github.com": ("Ghostery"),
+    "repo.ghosterybrowser.com": ("Ghostery),
 }
-if STAGING or LOCALDEV:
-    DOMAIN_WHITELIST.update(
-        {
-            "ftp.stage.mozaws.net": ("Firefox", "Fennec", "Devedition", "SeaMonkey", "Thunderbird"),
-            "bouncer-bouncer-releng.stage.mozaws.net": ("Firefox", "Fennec", "Devedition", "SeaMonkey", "Thunderbird"),
-            "stage.guardian.nonprod.cloudops.mozgcp.net": ("FirefoxVPN", "Guardian"),
-            "stage-vpn.guardian.nonprod.cloudops.mozgcp.net": ("FirefoxVPN", "Guardian"),
-        }
-    )
 
 # Logging needs to be set-up before importing the application to make sure that
 # logging done from other modules uses our Logger.
