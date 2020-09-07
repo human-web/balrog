@@ -47,14 +47,18 @@ node('docker && magrathea') {
 
   stage('push balrog agent image') {
     dir('agent') {
-      sh 'docker build -t balrog/agent .'
-      sh 'docker tag balrog/agent:latest 470602773899.dkr.ecr.us-east-1.amazonaws.com/balrog/agent:latest'
       withCredentials([[
         $class: 'AmazonWebServicesCredentialsBinding',
         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
         credentialsId: '	04e892d6-1f78-400e-9908-1e9466e238a9',
         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-      ]]) {
+      ], usernamePassword(
+            credentialsId: 'dd3e97c0-5a9c-4ba9-bf34-f0071f6c3afa',
+            passwordVariable: 'AUTH0_M2M_CLIENT_SECRET',
+            usernameVariable: 'AUTH0_M2M_CLIENT_ID'
+      )]) {
+        sh "docker build --build-arg AUTH0_M2M_CLIENT_ID=${AUTH0_M2M_CLIENT_ID} --build-arg AUTH0_M2M_CLIENT_SECRET=${AUTH0_M2M_CLIENT_SECRET} -t balrog/agent ."
+        sh 'docker tag balrog/agent:latest 470602773899.dkr.ecr.us-east-1.amazonaws.com/balrog/agent:latest'
         sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 470602773899.dkr.ecr.us-east-1.amazonaws.com'
         sh 'docker push 470602773899.dkr.ecr.us-east-1.amazonaws.com/balrog/agent:latest'
       }
