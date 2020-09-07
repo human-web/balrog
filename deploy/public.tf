@@ -26,7 +26,7 @@ data "template_file" "balrog-public-userdata-script" {
     db_host = local.db_host
     db_name = local.db_name
     db_user = local.db_user
-    db_pass = local.db_pass
+    db_pass = var.balrog_db_pass
   }
 }
 

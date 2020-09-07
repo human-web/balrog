@@ -16,6 +16,12 @@ locals {
   db_pass = ""
 }
 
+variable "balrog_db_pass" {
+  type        = string
+  description = "Password the balrog DB admin user"
+}
+
+
 provider "aws" {
   region = local.region
 }
