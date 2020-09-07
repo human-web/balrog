@@ -116,10 +116,10 @@ resource "aws_lb_target_group" "balrog-public" {
   protocol = "HTTP"
   vpc_id   = local.vpc_id
   health_check {
-    healthy_threshold   = 3
-    unhealthy_threshold = 10
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
     timeout             = 5
-    interval            = 10
+    interval            = 60
     path                = "/update/"
     port                = 9010
   }
