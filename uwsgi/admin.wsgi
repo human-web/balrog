@@ -20,7 +20,7 @@ LOCALDEV = bool(int(os.environ.get("LOCALDEV", 0)))
 SYSTEM_ACCOUNTS = ["ci"]
 DOMAIN_WHITELIST = {
     "github.com": ("Ghostery"),
-    "repo.ghosterybrowser.com": ("Ghostery),
+    "repo.ghosterybrowser.com": ("Ghostery"),
 }
 
 # Logging needs to be set-up before importing the application to make sure that
@@ -58,7 +58,7 @@ if not LOCALDEV:
         log.critical("GOOGLE_APPLICATION_CREDENTIALS provided, but does not exist")
         sys.exit(1)
 
-dbo.setDb(os.environ["DBURI"], buckets)
+dbo.setDb(os.environ["DBURI"], None)
 if os.environ.get("NOTIFY_TO_ADDR"):
     use_tls = False
     if os.environ.get("SMTP_TLS"):

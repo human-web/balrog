@@ -13,7 +13,7 @@ LOCALDEV = bool(int(os.environ.get("LOCALDEV", 0)))
 SPECIAL_FORCE_HOSTS = ["http://download.mozilla.org"]
 DOMAIN_WHITELIST = {
     "github.com": ("Ghostery"),
-    "repo.ghosterybrowser.com": ("Ghostery),
+    "repo.ghosterybrowser.com": ("Ghostery"),
 }
 
 # Logging needs to be set-up before importing the application to make sure that
