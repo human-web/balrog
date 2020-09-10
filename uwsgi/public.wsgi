@@ -12,7 +12,7 @@ LOCALDEV = bool(int(os.environ.get("LOCALDEV", 0)))
 
 SPECIAL_FORCE_HOSTS = ["http://download.mozilla.org"]
 DOMAIN_WHITELIST = {
-    "github.com": ("Ghostery"),
+    "github.com": ("Ghostery", "Firefox"),
     "repo.ghosterybrowser.com": ("Ghostery"),
 }
 

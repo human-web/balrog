@@ -19,7 +19,7 @@ LOCALDEV = bool(int(os.environ.get("LOCALDEV", 0)))
 
 SYSTEM_ACCOUNTS = ["ci"]
 DOMAIN_WHITELIST = {
-    "github.com": ("Ghostery"),
+    "github.com": ("Ghostery", "Firefox"),
     "repo.ghosterybrowser.com": ("Ghostery"),
 }
 
