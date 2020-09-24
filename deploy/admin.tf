@@ -44,6 +44,7 @@ resource "aws_launch_configuration" "balrogadmin-launch-config" {
   lifecycle {
     create_before_destroy = true
   }
+  enable_monitoring = false
 }
 
 resource "aws_autoscaling_group" "balrog-admin-autoscaling-group" {
