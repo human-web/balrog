@@ -20,7 +20,7 @@ LOCALDEV = bool(int(os.environ.get("LOCALDEV", 0)))
 SYSTEM_ACCOUNTS = ["ci"]
 DOMAIN_WHITELIST = {
     "github.com": ("Ghostery", "Firefox"),
-    "repo.ghosterybrowser.com": ("Ghostery"),
+    "get.ghosterybrowser.com": ("Ghostery"),
 }
 
 # Logging needs to be set-up before importing the application to make sure that
