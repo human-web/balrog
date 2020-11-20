@@ -26,6 +26,7 @@ data "template_file" "balrog-admin-userdata-script" {
     db_name = local.db_name
     db_user = local.db_user
     db_pass = var.balrog_db_pass
+    aws_region = local.region
   }
 }
 
