@@ -27,6 +27,7 @@ data "template_file" "balrog-public-userdata-script" {
     db_name = local.db_name
     db_user = local.db_user
     db_pass = var.balrog_db_pass
+    aws_region = local.region
   }
 }
 
@@ -35,7 +36,7 @@ resource "aws_launch_configuration" "balrogpublic-launch-config" {
   image_id = data.aws_ami.ubuntu.id
 
   security_groups = [ aws_security_group.balrog-public.id, local.vpn_sec_group_id ]
-  instance_type = "t3a.nano"
+  instance_type = "t3a.micro"
   user_data = data.template_file.balrog-public-userdata-script.rendered
   iam_instance_profile = aws_iam_instance_profile.balrog.arn
   associate_public_ip_address = false

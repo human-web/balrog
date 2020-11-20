@@ -2,7 +2,15 @@
 set -ex
 
 IMAGE=${docker_image}
-docker pull $IMAGE
+(
+    set +x
+    echo "Connecting to ECR..."
+    $(aws ecr get-login --region ${aws_region} --no-include-email)
+    echo "Connecting to ECR...SUCCESS"
+
+    docker pull "$IMAGE"
+    echo "Successfully pulled image: $IMAGE"
+)
 
 docker run -p 9010:9010 --restart always \
   --env "DBURI=mysql://${db_user}:${db_pass}@${db_host}/${db_name}" \

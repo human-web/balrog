@@ -31,7 +31,7 @@ data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
     name = "name"
-    values = ["master-cliqz-ubuntu-18.04-docker-2019*"]
+    values = ["ghostery-ubuntu-20-04-based-ghostery-search-serp-*"]
   }
 
   filter {
@@ -39,7 +39,7 @@ data "aws_ami" "ubuntu" {
     values = ["hvm"]
   }
 
-  owners = ["141047255820"]
+  owners = ["470602773899"]
 }
 
 resource "aws_iam_instance_profile" "balrog" {
